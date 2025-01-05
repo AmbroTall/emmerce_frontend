@@ -2,7 +2,7 @@
   <v-app dark>
     <SideBar :drawer="drawer" @toggle-drawer="toggleDrawer" />
     <v-main>
-      <Header @toggle-drawer="toggleDrawer" />
+      <Header :drawer="drawer" @toggle-drawer="toggleDrawer" />
       <router-view />
     </v-main>
   </v-app>

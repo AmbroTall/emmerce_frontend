@@ -1,4 +1,8 @@
 <template>
+  <div class="reminders">
+    <h1>Reminders</h1>
+    <p>Manage all reminders here.</p>
+  </div>
   <DataTable
     :apiUrl="'/reminders/'"
     :headers="leadTableHeaders"
@@ -29,4 +33,9 @@ const onDeleteLead = (lead) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.reminders {
+  padding: 24px;
+  color: white;
+}
+</style>

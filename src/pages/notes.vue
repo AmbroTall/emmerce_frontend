@@ -1,4 +1,8 @@
 <template>
+  <div class="notes">
+    <h1>Notes</h1>
+    <p>Manage all notes here.</p>
+  </div>
   <DataTable
     :apiUrl="'/notes/'"
     :headers="leadTableHeaders"
@@ -29,4 +33,9 @@ const onDeleteLead = (lead) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.notes {
+  padding: 24px;
+  color: white;
+}
+</style>

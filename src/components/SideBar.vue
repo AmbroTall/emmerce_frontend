@@ -4,7 +4,16 @@
     app
     @update:model-value="onDrawerUpdate"
   >
+    <!-- Close Button -->
+    <v-btn icon @click="$emit('toggle-drawer')" class="close-btn">
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
+
     <v-list>
+      <v-list-item class="mt-10">
+        <!-- Mini CRM Title with custom font size and color -->
+        <v-list-item-title class="title-text"> Mini CRM </v-list-item-title>
+      </v-list-item>
       <v-list-item
         v-for="link in links"
         :key="link.title"
@@ -33,12 +42,24 @@ const emit = defineEmits(["update:drawer"]);
 const onDrawerUpdate = (value) => {
   emit("update:drawer", value);
 };
-
 const links = [
   { title: "Dashboard", icon: "mdi-view-dashboard", route: "/" },
-  { title: "Leads", icon: "mdi-account", route: "/leads" },
-  { title: "Contacts", icon: "mdi-account", route: "/contacts" },
-  { title: "Notes", icon: "mdi-chart-bar", route: "/notes" },
-  { title: "Reminders", icon: "mdi-cog", route: "/reminders" },
+  { title: "Leads", icon: "mdi-account-group", route: "/leads" },
+  { title: "Contacts", icon: "mdi-phone", route: "/contacts" },
+  { title: "Notes", icon: "mdi-note", route: "/notes" },
+  { title: "Reminders", icon: "mdi-bell", route: "/reminders" },
 ];
 </script>
+
+<style scoped>
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1000; /* Ensure the button is on top */
+}
+.title-text {
+  font-size: 2rem; /* Increase the font size */
+  color: #03a9f4; /* Light blue color */
+}
+</style>

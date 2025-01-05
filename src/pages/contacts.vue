@@ -1,4 +1,9 @@
 <template>
+  <div class="contacts">
+    <h1>Contacts</h1>
+    <p>Manage contacts.</p>
+  </div>
+
   <DataTable
     :apiUrl="'/contacts/'"
     :headers="leadTableHeaders"
@@ -29,4 +34,9 @@ const onDeleteLead = (lead) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.contacts {
+  padding: 24px;
+  color: white;
+}
+</style>
