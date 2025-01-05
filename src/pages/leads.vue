@@ -1,6 +1,6 @@
 <template>
   <DataTable
-    :apiUrl="'/api/leads'"
+    :apiUrl="'/leads/'"
     :headers="leadTableHeaders"
     :itemsPerPage="10"
     @edit="onEditLead"
@@ -12,10 +12,10 @@
 import DataTable from "@/components/DataTable.vue";
 
 const leadTableHeaders = [
-  { title: "Name", key: "name" },
-  { title: "Status", key: "status" },
-  { title: "Created At", key: "created_at" },
-  { title: "Actions", key: "actions" },
+  { title: "Name", value: "name" },
+  { title: "Email", value: "email" },
+  { title: "Phone", value: "phone" },
+  { title: "Actions", value: "actions", align: "start" },
 ];
 
 const onEditLead = (lead) => {

@@ -1,6 +1,6 @@
 <template>
   <DataTable
-    :apiUrl="'/api/leads'"
+    :apiUrl="'/reminders/'"
     :headers="leadTableHeaders"
     :itemsPerPage="10"
     @edit="onEditLead"

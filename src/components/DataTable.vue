@@ -1,19 +1,14 @@
 <template>
   <div class="data-table-container">
-    <v-btn
-      class="mb-4"
-      color="primary"
-      floating
-      fab
-      dark
-      bottom
-      left
-      @click="openCreateModal"
-    >
-      <v-icon>mdi-plus</v-icon>
-      Create
-    </v-btn>
+    <!-- Wrapper for the button and table -->
+    <div class="d-flex justify-end mb-4">
+      <v-btn color="primary" floating fab dark @click="openCreateModal">
+        <v-icon>mdi-plus</v-icon>
+        Create
+      </v-btn>
+    </div>
 
+    <!-- Data Table -->
     <v-data-table
       :headers="headers"
       :items="items"
@@ -24,13 +19,31 @@
       @update:items-per-page="onItemsPerPageChange"
       class="elevation-1"
     >
-      <template #item="{ item }">
-        <v-btn icon color="primary" @click="onEdit(item)">
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
-        <v-btn icon color="error" @click="onDelete(item)">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
+      <template v-slot:item="{ item }">
+        <tr>
+          <!-- Loop through each header and create a dynamic column -->
+          <td
+            v-for="header in headers.slice(0, headers.length - 1)"
+            :key="header.value"
+            class="center-align"
+          >
+            {{ item[header.value] }}
+          </td>
+          <td>
+            <v-btn size="30px" icon color="primary" @click="onEdit(item)">
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn
+              size="30px"
+              class="ml-2"
+              icon
+              color="error"
+              @click="onDelete(item)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </td>
+        </tr>
       </template>
     </v-data-table>
 
@@ -55,8 +68,13 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import axios from "axios";
 import Modal from "./Modal.vue";
+import axiosInstance from "@/AxiosInstance";
+import { useRoute } from "vue-router";
+
+const route = useRoute(); // Get route information
+
+const lastSegment = ref(route.path.split("/").pop().slice(0, -1)); // Remove the last letter
 
 const props = defineProps({
   apiUrl: {
@@ -76,6 +94,7 @@ const props = defineProps({
 // const emit = defineEmits(["edit", "delete"]);
 
 const items = ref([]);
+const modifiedData = ref({});
 const totalItems = ref(0);
 const loading = ref(true);
 const page = ref(1);
@@ -96,16 +115,70 @@ const localItemsPerPage = ref(props.itemsPerPage);
 const fetchData = async () => {
   try {
     loading.value = true;
-    const response = await axios.get(props.apiUrl, {
+    const response = await axiosInstance.get(props.apiUrl, {
       params: {
         page: page.value,
         itemsPerPage: localItemsPerPage.value, // Use localItemsPerPage instead of prop
       },
     });
-    items.value = response.data.items;
-    totalItems.value = response.data.total;
+    items.value = response.data.results;
+    totalItems.value = response.data.count;
+    console.log("Total items:", response.data.results);
     loading.value = false;
   } catch (error) {
+    console.error("Error fetching data:", error);
+    loading.value = false;
+  }
+};
+
+const modifyData = async (data, mode) => {
+  console.log("Modify data:", data);
+  let successMessage = "";
+  let errorMessage = "";
+  try {
+    loading.value = true;
+
+    let response;
+
+    if (mode === "create") {
+      response = await axiosInstance.post(props.apiUrl, data);
+      modifiedData.value = response.data;
+      successMessage = `${lastSegment.value} created successfully!`;
+      errorMessage = `Error creating the ${lastSegment.value}.`;
+
+      // Add new item to the items array
+      items.value.push(response.data);
+    } else if (mode === "edit") {
+      response = await axiosInstance.put(props.apiUrl + `${data.id}/`, data);
+      modifiedData.value = response.data;
+      successMessage = `${lastSegment.value} updated successfully!`;
+      errorMessage = `Error updating the ${lastSegment.value}.`;
+
+      // Update the edited item in the items array
+      const index = items.value.findIndex((item) => item.id === data.id);
+      if (index !== -1) {
+        items.value[index] = response.data;
+      }
+    } else if (mode === "delete") {
+      await axiosInstance.delete(props.apiUrl + `${data.id}/`);
+      successMessage = `${lastSegment.value} deleted successfully!`;
+      errorMessage = `Error deleting the ${lastSegment.value}.`;
+
+      // Remove the deleted item from the items array
+      items.value = items.value.filter((item) => item.id !== data.id);
+    }
+
+    loading.value = false;
+
+    // After the action, show the success toaster
+    showToast.value = true;
+    toastMessage.value = successMessage;
+    toastSuccess.value = true;
+  } catch (error) {
+    // After the action, show the error toaster
+    showToast.value = true;
+    toastMessage.value = errorMessage;
+    toastSuccess.value = false;
     console.error("Error fetching data:", error);
     loading.value = false;
   }
@@ -155,21 +228,19 @@ const closeModal = () => {
   modalVisible.value = false;
 };
 
-const handleFormSubmit = () => {
+const handleFormSubmit = (data) => {
+  console.log("Form submitted:", data);
   // Handle the form submission, like create or update an item
   if (modalAction.value === "create") {
     // Create item
+    modifyData(data, "create");
   } else if (modalAction.value === "edit") {
     // Edit item
+    modifyData(data, "edit");
   } else if (modalAction.value === "delete") {
     // Delete item
+    modifyData(data, "delete");
   }
-
-  // After the action, show the success or failure toaster
-  showToast.value = true;
-  toastMessage.value = "Action successful!";
-  toastSuccess.value = true;
-
   closeModal();
 };
 
