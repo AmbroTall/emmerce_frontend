@@ -2,7 +2,10 @@
 <template>
   <div>
     <h2>Monthly Sales</h2>
-    <BarChart :data="chartData" :options="chartOptions" />
+    <BarChart
+      :data="chartData"
+      :options="chartOptions"
+    />
   </div>
 </template>
 

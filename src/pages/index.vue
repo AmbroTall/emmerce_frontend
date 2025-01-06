@@ -4,14 +4,18 @@
     <v-row>
       <v-col v-for="(value, title) in leadStats" :key="title" cols="12" md="3">
         <v-card class="pa-3" :color="getCardColor(title)" dark>
-          <v-card-title class="text-h6">{{ formatTitle(title) }}</v-card-title>
-          <v-card-subtitle class="text-h4">{{ value }}</v-card-subtitle>
+          <v-card-title class="text-h6">
+            {{ formatTitle(title) }}
+          </v-card-title>
+          <v-card-subtitle class="text-h4">
+            {{ value }}
+          </v-card-subtitle>
         </v-card>
       </v-col>
     </v-row>
 
     <!-- Contact Stats Graph -->
-    <v-row>
+    <!-- <v-row>
       <v-col cols="12" md="6">
         <v-card class="pa-3" color="secondary" dark>
           <v-card-title class="text-h6">Contact Stats</v-card-title>
@@ -20,10 +24,10 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
 
     <!-- Reminder Stats Graph -->
-    <v-row>
+    <!-- <v-row>
       <v-col cols="12" md="6">
         <v-card class="pa-3" color="accent" dark>
           <v-card-title class="text-h6">Reminder Stats</v-card-title>
@@ -39,10 +43,10 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
 
     <!-- Note Stats Graph -->
-    <v-row>
+    <!-- <v-row>
       <v-col cols="12" md="6">
         <v-card class="pa-3" color="teal" dark>
           <v-card-title class="text-h6">Note Stats</v-card-title>
@@ -51,14 +55,12 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
-
-    <ChartComponent />
+    </v-row> -->
   </v-container>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import {
   Chart as ChartJS,
   Title,
@@ -70,8 +72,6 @@ import {
   ArcElement,
 } from "chart.js";
 import axiosInstance from "@/AxiosInstance";
-import BarChart from "@/components/BarChart.vue";
-import ChartComponent from "@/components/ChartComponent.vue";
 
 // Register chart.js components
 ChartJS.register(
@@ -134,35 +134,35 @@ onMounted(() => {
 });
 
 // Prepare chart data
-const contactStatsChartData = computed(() => {
-  return {
-    labels: contactStats.value.map((item) => item["lead__name"]),
-    datasets: [
-      {
-        label: "Contact Count",
-        data: contactStats.value.map((item) => item.contact_count),
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
-});
+// const contactStatsChartData = computed(() => {
+//   return {
+//     labels: contactStats.value.map((item) => item["lead__name"]),
+//     datasets: [
+//       {
+//         label: "Contact Count",
+//         data: contactStats.value.map((item) => item.contact_count),
+//         backgroundColor: "rgba(75, 192, 192, 0.2)",
+//         borderColor: "rgba(75, 192, 192, 1)",
+//         borderWidth: 1,
+//       },
+//     ],
+//   };
+// });
 
-const noteStatsChartData = computed(() => {
-  return {
-    labels: noteStats.value.map((item) => item["lead__name"]),
-    datasets: [
-      {
-        label: "Note Count",
-        data: noteStats.value.map((item) => item.note_count),
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-        borderColor: "rgba(153, 102, 255, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
-});
+// const noteStatsChartData = computed(() => {
+//   return {
+//     labels: noteStats.value.map((item) => item["lead__name"]),
+//     datasets: [
+//       {
+//         label: "Note Count",
+//         data: noteStats.value.map((item) => item.note_count),
+//         backgroundColor: "rgba(153, 102, 255, 0.2)",
+//         borderColor: "rgba(153, 102, 255, 1)",
+//         borderWidth: 1,
+//       },
+//     ],
+//   };
+// });
 </script>
 
 <style scoped>

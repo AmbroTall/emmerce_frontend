@@ -5,10 +5,15 @@
     timeout="3000"
   >
     {{ message }}
-    <template v-slot:action="{ attrs }">
-      <v-btn color="white" text v-bind="attrs" @click="visible = false"
-        >Close</v-btn
+    <template #action="{ attrs }">
+      <v-btn
+        color="white"
+        text
+        v-bind="attrs"
+        @click="visible = false"
       >
+        Close
+      </v-btn>
     </template>
   </v-snackbar>
 </template>

@@ -5,14 +5,20 @@
     @update:model-value="onDrawerUpdate"
   >
     <!-- Close Button -->
-    <v-btn icon @click="$emit('toggle-drawer')" class="close-btn">
+    <v-btn
+      icon
+      class="close-btn"
+      @click="$emit('toggle-drawer')"
+    >
       <v-icon>mdi-close</v-icon>
     </v-btn>
 
     <v-list>
       <v-list-item class="mt-10">
         <!-- Mini CRM Title with custom font size and color -->
-        <v-list-item-title class="title-text"> Mini CRM </v-list-item-title>
+        <v-list-item-title class="title-text">
+          Mini CRM
+        </v-list-item-title>
       </v-list-item>
       <v-list-item
         v-for="link in links"

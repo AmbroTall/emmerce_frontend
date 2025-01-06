@@ -5,9 +5,9 @@
   </div>
 
   <DataTable
-    :apiUrl="'/contacts/'"
+    :api-url="'/contacts/'"
     :headers="contactTableHeaders"
-    :itemsPerPage="10"
+    :items-per-page="10"
     @edit="onEditLead"
     @delete="onDeleteLead"
   />

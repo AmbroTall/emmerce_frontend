@@ -4,9 +4,9 @@
     <p>Manage all notes here.</p>
   </div>
   <DataTable
-    :apiUrl="'/notes/'"
+    :api-url="'/notes/'"
     :headers="leadTableHeaders"
-    :itemsPerPage="10"
+    :items-per-page="10"
     @edit="onEditLead"
     @delete="onDeleteLead"
   />

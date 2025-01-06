@@ -4,9 +4,9 @@
     <p>Manage all reminders here.</p>
   </div>
   <DataTable
-    :apiUrl="'/reminders/'"
+    :api-url="'/reminders/'"
     :headers="leadTableHeaders"
-    :itemsPerPage="10"
+    :items-per-page="10"
     @edit="onEditLead"
     @delete="onDeleteLead"
   />

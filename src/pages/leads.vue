@@ -4,9 +4,9 @@
     <p>Manage all leads here.</p>
   </div>
   <DataTable
-    :apiUrl="'/leads/'"
+    :api-url="'/leads/'"
     :headers="leadTableHeaders"
-    :itemsPerPage="10"
+    :items-per-page="10"
     @edit="onEditLead"
     @delete="onDeleteLead"
   />

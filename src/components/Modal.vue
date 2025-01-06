@@ -1,5 +1,8 @@
 <template>
-  <v-dialog v-model="dialogVisible" max-width="600px">
+  <v-dialog
+    v-model="dialogVisible"
+    max-width="600px"
+  >
     <v-card>
       <v-card-title>
         <span v-if="action === 'create'">Create Item</span>
@@ -9,8 +12,14 @@
 
       <v-card-text>
         <!-- Dynamic Form Rendering -->
-        <v-form v-if="action !== 'delete'" ref="form">
-          <div v-for="(field, index) in formFields" :key="index">
+        <v-form
+          v-if="action !== 'delete'"
+          ref="form"
+        >
+          <div
+            v-for="(field, index) in formFields"
+            :key="index"
+          >
             <!-- Render Text Field for non-select types -->
             <v-text-field
               v-if="field.type !== 'select'"
@@ -19,34 +28,44 @@
               :type="field.type"
               :required="true"
             />
-            <!-- Render Select Field for 'select' types -->
             <v-select
               v-if="field.type === 'select'"
               v-model="formData[field.name]"
               :label="field.label"
               :items="field.choices"
+              item-title="name"
+              item-value="id"
               :required="true"
             />
           </div>
         </v-form>
 
         <!-- Delete confirmation -->
-        <v-alert v-if="action === 'delete'" type="error">
+        <v-alert
+          v-if="action === 'delete'"
+          type="error"
+        >
           Are you sure you want to delete this item?
         </v-alert>
       </v-card-text>
 
       <v-card-actions>
-        <v-btn text @click="close">Cancel</v-btn>
+        <v-btn
+          text
+          @click="close"
+        >
+          Cancel
+        </v-btn>
         <v-btn
           v-if="action !== 'delete'"
           color="primary"
           @click.prevent="submitForm"
-          >Save</v-btn
         >
+          Save
+        </v-btn>
         <v-btn
-          color="error"
           v-if="action === 'delete'"
+          color="error"
           @click.prevent="deleteItem"
         >
           Delete
@@ -57,6 +76,7 @@
 </template>
 
 <script setup>
+import axiosInstance from "@/AxiosInstance";
 import { ref, defineProps, defineEmits, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
@@ -71,6 +91,7 @@ const emit = defineEmits(["close", "submit"]);
 const dialogVisible = ref(props.visible);
 const formData = ref({});
 const formFields = ref([]);
+const leads = ref([]);
 
 const route = useRoute(); // Get route information
 
@@ -105,16 +126,27 @@ watch(
     setFormFields(); // Re-trigger field setup on route change
   }
 );
+const fetchLeads = async () => {
+  try {
+    const response = await axiosInstance.get("leads/");
+    // Structure leads data correctly
+    leads.value = response.data.results.map((lead) => ({
+      id: lead.id, // The unique identifier of the lead
+      name: lead.name, // The name of the lead to display
+    }));
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
 
 // Ensure form fields are set correctly when the component is mounted
 onMounted(() => {
+  fetchLeads();
   setFormFields();
 });
 
 // Set form fields based on the route segment
 const setFormFields = () => {
-  console.log("Current route segment:", lastSegment.value); // Debug log
-
   // Define form fields based on the URL segment
   if (lastSegment.value === "leads") {
     formFields.value = [
@@ -136,10 +168,24 @@ const setFormFields = () => {
       { label: "Last Name", name: "last_name", type: "text", required: true },
       { label: "Email", name: "email", type: "email", required: true },
       { label: "Phone", name: "phone", type: "tel", required: true },
+      {
+        name: "lead",
+        label: "Lead",
+        type: "select",
+        choices: leads.value,
+        required: true,
+      },
     ];
   } else if (lastSegment.value === "notes") {
     formFields.value = [
       { label: "Content", name: "content", type: "textarea", required: true },
+      {
+        name: "lead",
+        type: "select",
+        choices: leads.value,
+        label: "Lead",
+        required: true,
+      },
     ];
   } else {
     formFields.value = [
@@ -148,6 +194,14 @@ const setFormFields = () => {
         label: "Scheduled Time",
         name: "scheduled_time",
         type: "datetime-local",
+        required: true,
+      },
+      {
+        name: "lead",
+        label: "Lead",
+        type: "select",
+        choices: leads.value,
+
         required: true,
       },
     ];
@@ -170,6 +224,14 @@ const deleteItem = () => {
 const close = () => {
   emit("close");
 };
+
+watch(
+  () => leads.value,
+  () => {
+    setFormFields(); // Re-set form fields when leads are fetched
+  },
+  { immediate: true } // Trigger immediately when component is mounted
+);
 </script>
 
 <style scoped>

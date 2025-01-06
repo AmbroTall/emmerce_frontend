@@ -2,7 +2,13 @@
   <div class="data-table-container">
     <!-- Wrapper for the button and table -->
     <div class="d-flex justify-end mb-4">
-      <v-btn color="primary" floating fab dark @click="openCreateModal">
+      <v-btn
+        color="primary"
+        floating
+        fab
+        dark
+        @click="openCreateModal"
+      >
         <v-icon>mdi-plus</v-icon>
         Create
       </v-btn>
@@ -15,11 +21,11 @@
       :items-per-page="localItemsPerPage"
       :loading="loading"
       :server-items-length="totalItems"
+      class="elevation-1"
       @update:page="onPageChange"
       @update:items-per-page="onItemsPerPageChange"
-      class="elevation-1"
     >
-      <template v-slot:item="{ item }">
+      <template #item="{ item }">
         <tr>
           <!-- Loop through each header and create a dynamic column -->
           <td
@@ -30,7 +36,12 @@
             {{ item[header.value] }}
           </td>
           <td>
-            <v-btn size="30px" icon color="primary" @click="onEdit(item)">
+            <v-btn
+              size="30px"
+              icon
+              color="primary"
+              @click="onEdit(item)"
+            >
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-btn
@@ -49,6 +60,7 @@
 
     <!-- Modal component -->
     <Modal
+      :leads="leads.value"
       :visible="modalVisible"
       :action="modalAction"
       :item="modalItem"
@@ -73,7 +85,7 @@ import axiosInstance from "@/AxiosInstance";
 import { useRoute } from "vue-router";
 
 const route = useRoute(); // Get route information
-
+const leads = ref([]);
 const lastSegment = ref(route.path.split("/").pop().slice(0, -1)); // Remove the last letter
 
 const props = defineProps({
@@ -201,9 +213,18 @@ const onItemsPerPageChange = (newLimit) => {
 // const onDelete = (item) => {
 //   emit("delete", item);
 // };
+const fetchLeads = async () => {
+  try {
+    const response = await axiosInstance.get("leads/");
+    leads.value = response.data.results;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
 
 onMounted(() => {
   fetchData();
+  fetchLeads();
 });
 
 // Handlers for various actions
