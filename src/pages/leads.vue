@@ -19,7 +19,8 @@ const leadTableHeaders = [
   { title: "Name", value: "name" },
   { title: "Email", value: "email" },
   { title: "Phone", value: "phone" },
-  { title: "Actions", value: "actions", align: "start" },
+  { title: "Created At", value: "created_at" },
+  { title: "Actions", key: "actions" },
 ];
 
 const onEditLead = (lead) => {

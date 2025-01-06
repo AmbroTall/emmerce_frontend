@@ -118,25 +118,39 @@ const setFormFields = () => {
   // Define form fields based on the URL segment
   if (lastSegment.value === "leads") {
     formFields.value = [
-      { name: "name", label: "Lead Name", type: "text" },
-      { name: "email", label: "Email", type: "email" },
-      { name: "phone", label: "Phone", type: "tel" },
+      { name: "name", label: "Lead Name", type: "text", required: true },
+      { name: "email", label: "Email", type: "email", required: true },
+      { name: "phone", label: "Phone", type: "tel", required: true },
+      { label: "Company", name: "company", type: "text", required: false },
       {
         name: "status",
         label: "Status",
         type: "select",
         choices: ["new", "contacted", "qualified", "lost"],
+        required: true,
       },
     ];
   } else if (lastSegment.value === "contacts") {
     formFields.value = [
-      { name: "first_name", label: "First Name", type: "text" },
-      { name: "last_name", label: "Last Name", type: "text" },
-      { name: "email", label: "Email", type: "email" },
-      { name: "phone", label: "Phone", type: "tel" },
+      { label: "First Name", name: "first_name", type: "text", required: true },
+      { label: "Last Name", name: "last_name", type: "text", required: true },
+      { label: "Email", name: "email", type: "email", required: true },
+      { label: "Phone", name: "phone", type: "tel", required: true },
+    ];
+  } else if (lastSegment.value === "notes") {
+    formFields.value = [
+      { label: "Content", name: "content", type: "textarea", required: true },
     ];
   } else {
-    formFields.value = [];
+    formFields.value = [
+      { label: "Title", name: "title", type: "text", required: true },
+      {
+        label: "Scheduled Time",
+        name: "scheduled_time",
+        type: "datetime-local",
+        required: true,
+      },
+    ];
   }
 
   console.log("Form fields:", formFields.value); // Debug log

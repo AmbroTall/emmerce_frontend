@@ -6,7 +6,7 @@
 
   <DataTable
     :apiUrl="'/contacts/'"
-    :headers="leadTableHeaders"
+    :headers="contactTableHeaders"
     :itemsPerPage="10"
     @edit="onEditLead"
     @delete="onDeleteLead"
@@ -16,13 +16,20 @@
 <script setup>
 import DataTable from "@/components/DataTable.vue";
 
-const leadTableHeaders = [
-  { title: "Name", key: "name" },
-  { title: "Status", key: "status" },
-  { title: "Created At", key: "created_at" },
+const contactTableHeaders = [
+  { title: "First Name", value: "first_name" },
+  { title: "Last Name", value: "last_name" },
+  { title: "Email", value: "email" },
+  { title: "Phone", value: "phone" },
+  { title: "Created At", value: "created_at" },
   { title: "Actions", key: "actions" },
 ];
 
+/**
+ * Handle when a lead is edited.
+ *
+ * @param {object} lead - The lead being edited.
+ */
 const onEditLead = (lead) => {
   // Handle edit
   console.log("Edit lead:", lead);

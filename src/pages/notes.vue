@@ -16,9 +16,8 @@
 import DataTable from "@/components/DataTable.vue";
 
 const leadTableHeaders = [
-  { title: "Name", key: "name" },
-  { title: "Status", key: "status" },
-  { title: "Created At", key: "created_at" },
+  { title: "Content", value: "content" },
+  { title: "Created At", value: "created_at" },
   { title: "Actions", key: "actions" },
 ];
 
